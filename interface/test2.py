@@ -39,28 +39,40 @@ class WebView(QWebView):
 
 class DOMTravler():
     def __init__(self, frame):
-    self.setFirst(frame.documentElement())
-    print(frame.toHtml().toAscii())
+        self.setFirst(frame.documentElement())
+        print(frame.toHtml().toAscii())
     def findInTree(self, element):
-      self.list = [self.first]
+        self.list = [self.first]
 
     #iterate Depth first and fill list
-      temp = self.first.firstChild()
-      while (not temp.isNull()) and not (temp.__eq__(element)):
-         while (not temp.isNull()) and not (temp.__eq__(element)):
-            self.list.append(temp)
-            temp = temp.firstChild()
-         temp = temp.nextSibling()
+        temp = self.first
+        temp = self.recursive(temp, element)
 
-      if(temp.__eq__(element)):
-          print('element found!')
-          for el in self.list :
-              print(el.toInnerXml() + ' : ' + el.toOuterXml() + '\n')
-      else:
-          print('element not found!')
+        if(temp.__eq__(element)):
+            print('element found!')
+            for el in self.list :
+                print(el.toInnerXml() + ' : ' + el.toOuterXml() + '\n')
+        else:
+            print('element not found!')
+    def recursive(self, element, check):
+        if(element.isNull()):
+            print "DEAD END"
+            return 0
+        elif(element.__eq__(check)):
+            print "FOUND!"
+            return element
+        else:
+            print "DOWN"
+            temp = self.recursive(element.firstChild(), check)
+            print "ACROSS"
+            temp1 = self.recursive(element.nextSibling(), check)
+            if(temp):
+                return temp
+            elif(temp1):
+                return temp1
 
     def setFirst(self, element):
-      self.first = element
+        self.first = element
 
 
 
